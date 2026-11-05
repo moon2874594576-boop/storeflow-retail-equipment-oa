@@ -4,6 +4,8 @@
 
 后端 Django / DRF，前端 Vue 3 / Element Plus。**在 PyCharm 安装 Python 依赖，运行根目录 `main.py` 即可演示。** 仓库包含已构建的前端，日常演示不需要 Node.js、API Key 或外部在线服务。第一次安装依赖需要网络。
 
+公开仓库：[moon2874594576-boop/storeflow-retail-equipment-oa](https://github.com/moon2874594576-boop/storeflow-retail-equipment-oa)。Windows、Linux、PostgreSQL和Docker验证已通过；GitHub下载版独立环境已运行通过。当前电脑的PyCharm自身启动异常，IDE内点击Run和使用者本人验收仍待确认，详情见[验证记录](docs/verification.md)。
+
 ## PyCharm 运行
 
 ![StoreFlow 工作台](docs/images/workbench.png)
@@ -18,6 +20,8 @@
 
 4. 右键根目录 `main.py` → **Run 'main'**。浏览器自动打开 **http://127.0.0.1:8765**。
 5. 首次启动自动迁移数据库并创建演示数据；再次运行不会重置既有业务记录。停止时使用 PyCharm 停止按钮。
+
+Windows 已安装根目录 `.venv` 依赖时，也可双击 `start.bat` 启动同一个入口。该脚本不会联网安装依赖，不会另外启动前端开发服务器。旧的 `backend/init_data.py` 通用 OA 初始化入口已停用，避免混入旧账号与旧业务数据。
 
 命令行同样支持：
 

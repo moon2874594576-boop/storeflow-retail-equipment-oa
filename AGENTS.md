@@ -28,7 +28,7 @@
 
 ### 项目结构
 ```
-enterprise-oa/
+storeflow/
 ├── backend/           # Django后端
 │   ├── config/       # 项目配置
 │   ├── apps/         # 业务模块
