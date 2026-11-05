@@ -1,11 +1,22 @@
-# AGENTS.md - 企业OA办公系统 AI开发规范
+# AGENTS.md - StoreFlow 开发与验证规范
 
 ## 项目概述
-- 项目名称：企业OA办公系统 (Enterprise OA System)
+- 项目名称：StoreFlow 门店设备借用与归还工作台
 - 技术架构：前后端分离
 - 前端：Vue3 + Element Plus
 - 后端：Django + Django REST Framework
-- 数据库：SQLite
+- 数据库：本机演示默认 SQLite，容器与集成验证支持 PostgreSQL 16
+- 来源：Enterprise OA c4a8df979a723ec9bf71e8cdd63dbbdcab14a678，改造记录见 docs/upstream.md
+- 入口：根目录 main.py；前端 dist 随仓库提供，不提交 runtime、密钥和个人业务数据
+
+## 业务与交付约束
+
+1. 申请、审批、发放、签收、归还验收分别维护状态，不能通过普通编辑接口绕过。
+2. 后端对列表、详情、统计和导出执行相同数据范围过滤。
+3. 分配设备必须防止并发重复占用；分别记录 SQLite 与 PostgreSQL 的实际验证结果。
+4. 不以代码生成完成、构建文件存在或 CI 配置存在作为测试通过依据。
+5. 验证记录必须对应实际版本和执行结果；用户操作验收与自动化验证分开。
+6. 无真实门店数据，不声称已被企业使用或取得真实业务收益。
 
 ## AI开发规范
 

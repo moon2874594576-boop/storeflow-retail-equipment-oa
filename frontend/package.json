@@ -1,5 +1,5 @@
 {
-  "name": "enterprise-oa-frontend",
+  "name": "storeflow-workspace",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -17,8 +17,8 @@
     "dayjs": "^1.11.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.0",
-    "vite": "^5.2.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "vite": "^7.0.0",
     "sass": "^1.71.0"
   }
 }

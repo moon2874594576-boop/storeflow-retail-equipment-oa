@@ -1,0 +1,19 @@
+<template><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path :d="paths[name] || paths.grid" /></svg></template>
+<script setup>
+defineProps({ name: String })
+const paths = {
+ grid: 'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
+ list: 'M8 4h12v16H4V4h4 M8 2h8v4H8z M8 11h8 M8 15h5',
+ box: 'M3 7l9-4 9 4-9 4z M3 7v10l9 4 9-4V7 M12 11v10 M7.5 5l9 4',
+ chart: 'M4 3v17h17 M8 16v-5 M13 16V6 M18 16V9',
+ shield: 'M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6z M8 12l3 3 5-6',
+ help: 'M9 8a3 3 0 016 0c0 2-3 2-3 5 M12 17h.01 M21 12a9 9 0 11-18 0 9 9 0 0118 0',
+ settings: 'M12 8a4 4 0 100 8 4 4 0 000-8 M12 2v3 M12 19v3 M2 12h3 M19 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2',
+ arrow: 'M5 12h14 M14 7l5 5-5 5', plus: 'M12 5v14 M5 12h14',
+ refresh: 'M20 7v5h-5 M4 17v-5h5 M19 11a7 7 0 00-12-5L4 9 M5 13a7 7 0 0012 5l3-3',
+ clock: 'M12 7v5l3 2 M21 12a9 9 0 11-18 0 9 9 0 0118 0', check: 'M5 12l4 4L19 6',
+ logout: 'M9 4H4v16h5 M9 12h12 M17 8l4 4-4 4', user: 'M16 7a4 4 0 11-8 0 4 4 0 018 0 M4 21v-2a8 8 0 0116 0v2',
+ download: 'M12 3v12 M7 10l5 5 5-5 M4 16v5h16v-5', search: 'M20 20l-5-5 M17 10a7 7 0 11-14 0 7 7 0 0114 0',
+ pin: 'M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1114 0 M15 10a3 3 0 11-6 0 3 3 0 016 0', menu: 'M4 6h16 M4 12h16 M4 18h16', close: 'M6 6l12 12 M18 6L6 18',
+}
+</script>

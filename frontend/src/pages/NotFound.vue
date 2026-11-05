@@ -1,0 +1,1 @@
+<template><section class="panel not-found"><span class="eyebrow">404 / PAGE NOT FOUND</span><h1>这条路径暂时没有设备抵达。</h1><p>页面不存在，或链接已更新。可以回到工作台继续操作。</p><router-link to="/"><el-button type="primary">返回工作台</el-button></router-link></section></template>

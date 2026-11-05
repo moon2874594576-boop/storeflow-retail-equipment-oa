@@ -1,144 +1,113 @@
-# 企业OA办公系统 (Enterprise OA System)
+# StoreFlow · 门店设备借用与归还工作台
 
-基于 Vue3 + Django 的企业办公自动化系统，展示 AI Coding 完整开发流程。
+围绕连锁零售门店的扫码枪、标签打印机和平板，完成申请、店长审批、设备发放、员工签收、归还验收和异常设备处理。它是基于 Enterprise OA 的业务与工程改造项目，使用虚构门店及设备，适合本地学习和面试演示。
 
-## 技术栈
+后端 Django / DRF，前端 Vue 3 / Element Plus。**在 PyCharm 安装 Python 依赖，运行根目录 `main.py` 即可演示。** 仓库包含已构建的前端，日常演示不需要 Node.js、API Key 或外部在线服务。第一次安装依赖需要网络。
 
-- **前端**: Vue 3 + Vite 5 + Element Plus 2.7 + Pinia
-- **后端**: Django 5 + Django REST Framework + SimpleJWT
-- **数据库**: SQLite
+## PyCharm 运行
 
-## 功能模块
+![StoreFlow 工作台](docs/images/workbench.png)
 
-- ✅ 用户权限管理（RBAC角色权限模型）
-- ✅ 员工管理（部门树形结构、岗位管理）
-- ✅ 审批流程（请假、报销、出差审批）
-- ✅ 公告通知（发布、已读、未读统计）
-- ✅ 首页仪表盘（数据统计、快捷入口）
+1. 下载仓库 ZIP 并解压，或使用 Git 克隆；在 PyCharm 中打开 `main.py` 所在目录。
+2. 创建 Python **3.12** 虚拟环境，选为项目解释器。
+3. 在 PyCharm Terminal 执行：
 
-## 快速开始
+   ```powershell
+   python -m pip install -r requirements.txt
+   ```
 
-### 环境要求
+4. 右键根目录 `main.py` → **Run 'main'**。浏览器自动打开 **http://127.0.0.1:8765**。
+5. 首次启动自动迁移数据库并创建演示数据；再次运行不会重置既有业务记录。停止时使用 PyCharm 停止按钮。
 
-- Python 3.11+
-- Node.js 18+
-- npm 9+
+命令行同样支持：
 
-### 一键启动
-
-```bash
-# Windows
-start.bat
+```powershell
+python main.py --check
+python main.py
+python main.py --no-browser --port 8766
 ```
 
-### 手动启动
+`main.py` 按文件位置定位资源，不依赖 IDE 工作目录。端口占用时停止旧实例或换端口。数据保存在 `runtime/storeflow.sqlite3`，签名密钥保存在 `runtime/secret.key`，两者都不上传 GitHub。
 
-**后端**
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python init_data.py
-python manage.py runserver 0.0.0.0:8000
+## 演示账号
+
+下列账号仅用于本机虚构业务演示，默认密码均为 **`Demo2026!`**。
+
+| 账号 | 角色 | 用途 |
+|---|---|---|
+| `employee_a`、`employee_b` | 门店员工 | 第一家门店申请、签收、归还 |
+| `employee_c`、`employee_d` | 门店员工 | 第二家门店的操作与隔离验证 |
+| `manager_a`、`manager_b` | 店长 | 审批对应门店的申请 |
+| `custodian` | 设备管理员 | 台账、发放、验收、维修后恢复 |
+| `admin` | 系统管理员 | 基础配置、账号和审计 |
+
+第一次初始化前设置 `STOREFLOW_DEMO_PASSWORD` 可替换演示密码。已有账号不会因为再次播种而重设密码。外部监听默认关闭演示初始化，需要显式设置 `STOREFLOW_DEMO=1` 才会创建演示数据。
+
+## 核心业务
+
+```mermaid
+flowchart LR
+  A[草稿] --> B[待店长审批]
+  B -->|通过| C[待发放]
+  B -->|驳回| X[已驳回]
+  C --> D[待签收]
+  D --> E[借用中]
+  E --> F[待归还验收]
+  F -->|正常| G[已归还 / 设备空闲]
+  F -->|损坏| H[已归还 / 设备待维修]
 ```
 
-**前端**
-```bash
+每张申请借用一台设备；申请时确定类别、用途和预计归还日期，发放时确定具体设备。审批通过不等于设备已经交付。未签收的发放可以撤销；归还未验收的设备不能重新分配；损坏设备必须确认修复后才能再发放。
+
+门店员工处理本人申请，店长审批本门店，设备管理员负责实物交接，系统管理员维护基础资料。后端同样执行权限检查；不能通过普通表单修改关键状态绕过流程。
+
+## 五分钟演示
+
+1. `employee_a` 新建申请，选择类别、填写用途和未来归还日期，保存草稿后提交。
+2. 换 `manager_a`，查看待办并通过。
+3. 换 `custodian`，发放对应类别的一台空闲设备。
+4. 换 `employee_a`，确认签收，再申请归还。
+5. 换 `custodian`，正常验收，核对设备恢复空闲、详情时间线与统计。
+
+另做一次损坏归还，验证设备进入待维修。完整步骤和本人验收清单见 [演示手册](docs/demo.md)。
+
+## 测试与验证
+
+```powershell
+python backend/manage.py test
+python scripts/test_database_tools.py -v
+```
+
+在演示服务已经启动时，可以另开终端执行 `python scripts/verify_http.py`，对实际 HTTP 服务验证登录、权限、流转、并发竞争与导出范围。该脚本会新增验收申请记录，仅用于虚构演示数据库。
+
+前端修改后才需要 Node.js 并重新构建：
+
+```powershell
 cd frontend
-npm install
-npm run dev
+npm ci
+npm run build
 ```
 
-## 默认账号
+实际环境、测试结果、浏览器操作和限制记录在 [验证记录](docs/verification.md)。自动化验证与本人操作验收分别记录，未执行项目不宣称通过。
 
-| 角色 | 用户名 | 密码 |
-|------|--------|------|
-| 超级管理员 | admin | admin123 |
-| 部门经理 | manager | manager123 |
-| 普通员工 | employee | employee123 |
+## 备份与恢复
 
-## 项目结构
-
-```
-enterprise-oa/
-├── backend/                 # Django后端
-│   ├── config/             # 项目配置
-│   ├── apps/               # 业务模块
-│   │   ├── users/         # 用户权限
-│   │   ├── employees/     # 员工管理
-│   │   ├── approvals/     # 审批流程
-│   │   └── announcements/ # 公告通知
-│   ├── init_data.py       # 初始化数据
-│   └── manage.py          # Django管理脚本
-├── frontend/               # Vue前端
-│   ├── src/
-│   │   ├── api/           # API接口
-│   │   ├── views/         # 页面组件
-│   │   ├── stores/        # 状态管理
-│   │   └── router/        # 路由配置
-│   └── index.html
-├── docs/                   # 项目文档
-├── AGENTS.md               # AI开发规范
-├── claude.md               # 开发规范
-├── start.bat              # 启动脚本
-└── README.md
+```powershell
+python scripts/backup.py --output backups/interview.sqlite3
+python scripts/restore.py --input backups/interview.sqlite3 --target runtime/restored.sqlite3
 ```
 
-## API文档
+备份使用 SQLite 一致性备份 API。恢复只写入**新文件**，不会覆盖活动数据库；已有备份文件也不会覆盖。检查恢复结果后，在 PyCharm 环境变量设置 `STOREFLOW_DB_PATH` 指向恢复文件，再启动。容器、PostgreSQL 备份恢复见 [部署手册](docs/deployment.md)。
 
-启动后端服务后访问：
-- API根路径: http://localhost:8000/api/
-- 管理后台: http://localhost:8000/admin/
+## 目录与来源
 
-主要API模块：
-- `/api/auth/` - 认证接口
-- `/api/users/` - 用户管理
-- `/api/employees/` - 员工管理
-- `/api/approvals/` - 审批流程
-- `/api/announcements/` - 公告通知
+| 位置 | 内容 |
+|---|---|
+| `main.py` | PyCharm / 命令行启动入口 |
+| `backend/` | 认证、权限、设备、借用流转、统计、接口测试 |
+| `frontend/` | Vue 源码及随仓库提供的 `dist/` |
+| `scripts/` | 数据库备份、恢复、验证工具 |
+| `docs/` | 设计、部署、演示、验证、来源 |
+| `runtime/` | 本地数据库、日志、签名密钥（Git 忽略） |
 
-## 开发说明
-
-本项目采用 **SDD（软件设计文档驱动）** + **TDD（测试驱动开发）** 模式：
-
-1. 先编写设计文档 (docs/spec.md)
-2. 再编写计划文档 (docs/plan.md)
-3. 按计划逐步实现功能
-4. 每个模块完成后进行测试
-
-## 常用命令
-
-```bash
-# 数据库迁移
-python manage.py makemigrations
-python manage.py migrate
-
-# 创建超级管理员
-python manage.py createsuperuser
-
-# 收集静态文件
-python manage.py collectstatic
-
-# 加载初始数据
-python init_data.py
-
-# 前端构建
-cd frontend && npm run build
-
-# 前端预览
-cd frontend && npm run preview
-```
-
-## 开发流程
-
-详细开发流程文档请参考：
-- [项目设计文档](docs/spec.md)
-- [项目计划文档](docs/plan.md)
-- [AI开发规范](AGENTS.md)
-- [开发规范](claude.md)
-
-## 许可证
-
-MIT License
+上游：[yanyihao-han/enterprise-oa](https://github.com/yanyihao-han/enterprise-oa)，参考提交 `c4a8df979a723ec9bf71e8cdd63dbbdcab14a678`。本仓库保留上游导入基线和后续改造。上游 README 声明 MIT，出处与复用范围见 [改造对照](docs/upstream.md)。本项目不代表任何企业内部系统或实际使用业绩。
