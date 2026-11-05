@@ -74,7 +74,7 @@ flowchart LR
 ## 测试与验证
 
 ```powershell
-python backend/manage.py test
+python backend/manage.py test apps.loans.tests
 python scripts/test_database_tools.py -v
 ```
 
