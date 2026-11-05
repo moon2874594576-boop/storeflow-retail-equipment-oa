@@ -14,6 +14,10 @@ ROOT = Path(__file__).resolve().parent
 
 
 def main():
+    # Windows IDE 使用管道接收输出时也统一为 UTF-8，避免中文启动提示乱码。
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="StoreFlow 门店设备借用与归还工作台")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)
