@@ -4,7 +4,7 @@
 
 后端 Django / DRF，前端 Vue 3 / Element Plus。**在 PyCharm 安装 Python 依赖，运行根目录 `main.py` 即可演示。** 仓库包含已构建的前端，日常演示不需要 Node.js、API Key 或外部在线服务。第一次安装依赖需要网络。
 
-公开仓库：[moon2874594576-boop/storeflow-retail-equipment-oa](https://github.com/moon2874594576-boop/storeflow-retail-equipment-oa)。Windows、Linux、PostgreSQL和Docker验证已通过；GitHub下载版独立环境已运行通过。当前电脑的PyCharm自身启动异常，IDE内点击Run和使用者本人验收仍待确认，详情见[验证记录](docs/verification.md)。
+公开仓库：[moon2874594576-boop/storeflow-retail-equipment-oa](https://github.com/moon2874594576-boop/storeflow-retail-equipment-oa)。Windows、Linux、PostgreSQL和Docker验证已通过；GitHub下载版独立环境已运行通过。已在本机 PyCharm 2024.2.1 内使用下载版独立解释器运行 `main.py` 并自动打开浏览器；使用者本人彩排清单见[演示手册](docs/demo.md)，实测证据见[验证记录](docs/verification.md)。
 
 ## PyCharm 运行
 
